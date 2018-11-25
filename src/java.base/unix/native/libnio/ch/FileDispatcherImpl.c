@@ -41,7 +41,7 @@
 #include "nio.h"
 #include "nio_util.h"
 
-#ifdef _ALLBSD_SOURCE
+#if defined(_ALLBSD_SOURCE) || defined(__HAIKU__)
 #define stat64 stat
 #define flock64 flock
 #define off64_t off_t

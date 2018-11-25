@@ -51,6 +51,10 @@
   #include <signal.h>
   /* Also defined in net/bsd_close.c */
   #define INTERRUPT_SIGNAL SIGIO
+#elif __HAIKU__
+  #include <pthread.h>
+  #include <signal.h>
+  #define INTERRUPT_SIGNAL (SIGRTMAX - 2)
 #else
   #error "missing platform-specific definition here"
 #endif

@@ -119,5 +119,15 @@ JNIEXPORT jint JNICALL Java_com_sun_media_sound_Platform_nGetLibraryForFeature
 #endif
     }
 #endif
+#if (X_PLATFORM == X_HAIKU)
+    switch (feature) {
+    case com_sun_media_sound_Platform_FEATURE_MIDIIO:
+        return com_sun_media_sound_Platform_LIB_MAIN;
+    case com_sun_media_sound_Platform_FEATURE_DIRECT_AUDIO:
+        return com_sun_media_sound_Platform_LIB_MAIN;
+    case com_sun_media_sound_Platform_FEATURE_PORTS:
+        return 0;
+    }
+#endif
     return 0;
 }

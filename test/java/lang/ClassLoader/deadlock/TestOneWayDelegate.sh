@@ -66,6 +66,9 @@ case "$OS" in
   AIX )
     FS="/"
     ;;
+  Haiku )
+    FS="/"
+    ;;
   Windows* | CYGWIN* )
     FS="\\"
     ;;

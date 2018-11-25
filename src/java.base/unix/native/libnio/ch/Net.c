@@ -765,6 +765,12 @@ Java_sun_nio_ch_Net_pollconnValue(JNIEnv *env, jclass this)
     return (jshort)POLLOUT;
 }
 
+#ifdef __HAIKU__
+
+#define IPV6_ADD_MEMBERSHIP     IPV6_JOIN_GROUP
+#define IPV6_DROP_MEMBERSHIP    IPV6_LEAVE_GROUP
+
+#endif
 
 /* Declared in nio_util.h */
 

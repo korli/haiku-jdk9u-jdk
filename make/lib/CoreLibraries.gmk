@@ -118,6 +118,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBVERIFY, \
     LDFLAGS := $(LDFLAGS_JDKLIB) \
         $(call SET_SHARED_LIBRARY_ORIGIN), \
     LIBS_unix := -ljvm -lc, \
+    LIBS_haiku := -ljvm, \
     LIBS_windows := jvm.lib, \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \
     RC_FLAGS := $(RC_FLAGS) \
@@ -169,6 +170,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJAVA, \
     LDFLAGS := $(LDFLAGS_JDKLIB) \
         $(call SET_SHARED_LIBRARY_ORIGIN), \
     LDFLAGS_macosx := -L$(SUPPORT_OUTPUTDIR)/native/$(MODULE)/, \
+    LDFLAGS_haiku := $(BUILD_LIBFDLIBM) -lbe, \
     LDFLAGS_windows := -export:winFileHandleOpen -export:handleLseek \
         -export:getLastErrorString \
         -export:getErrorString -delayload:shell32.dll, \
@@ -237,6 +239,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBZIP, \
         -export:ZIP_InflateFully -export:ZIP_CRC32 -export:ZIP_FreeEntry, \
     LIBS_unix := -ljvm -ljava $(LIBZ), \
     LIBS_solaris := -lc, \
+    LIBS_haiku := $(LIBZ) -ljava -ljvm, \
     LIBS_windows := jvm.lib $(WIN_JAVA_LIB), \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \
     RC_FLAGS := $(RC_FLAGS) \
@@ -325,6 +328,10 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
   LIBJLI_CFLAGS += -DPACKAGE_PATH=\"$(PACKAGE_PATH)\"
 endif
 
+ifeq ($(OPENJDK_TARGET_OS), haiku)
+  LIBJAVA_EXCLUDE_FILES += TimeZone_md.c
+endif
+
 ifeq ($(OPENJDK_TARGET_OS), windows)
   # Staticically link with c runtime on windows.
   LIBJLI_CFLAGS := $(filter-out -MD, $(LIBJLI_CFLAGS))
@@ -394,6 +401,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJLI, \
     LIBS_solaris := $(LIBDL) -lc, \
     LIBS_aix := $(LIBDL),\
     LIBS_macosx := -framework Cocoa -framework Security -framework ApplicationServices, \
+    LIBS_haiku := $(LIBZ), \
     LIBS_windows := advapi32.lib comctl32.lib user32.lib, \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \
     RC_FLAGS := $(RC_FLAGS) \

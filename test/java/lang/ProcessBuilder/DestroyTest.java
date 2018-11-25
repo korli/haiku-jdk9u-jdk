@@ -157,6 +157,9 @@ public class DestroyTest {
         } else if (osName.equals("AIX")) {
             return new UnixTest(
                 File.createTempFile("ProcessTrap-", ".sh",null));
+        } else if (osName.equals("Haiku")) {
+            return new UnixTest(
+                File.createTempFile("ProcessTrap-", ".sh",null));
         }
         return null;
     }

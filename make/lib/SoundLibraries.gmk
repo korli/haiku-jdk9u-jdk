@@ -111,6 +111,22 @@ ifeq ($(OPENJDK_TARGET_OS), solaris)
   LIBJSOUND_SRC_FILES += $(LIBJSOUND_DAUDIOFILES)
 endif # OPENJDK_TARGET_OS solaris
 
+ifeq ($(OPENJDK_TARGET_OS), haiku)
+  LIBJSOUND_LANG := C++
+  LIBJSOUND_CFLAGS += -DX_PLATFORM=X_HAIKU \
+      -DUSE_DAUDIO=TRUE \
+      -DUSE_PLATFORM_MIDI_OUT=TRUE \
+      -DUSE_PLATFORM_MIDI_IN=TRUE
+  LIBJSOUND_SRC_DIRS += $(JDK_TOPDIR)/src/java.desktop/haiku/native/libjsound
+  LIBJSOUND_SRC_FILES += \
+      PLATFORM_API_HaikuOS_MidiIn.cpp \
+      PLATFORM_API_HaikuOS_MidiOut.cpp \
+      PLATFORM_API_HaikuOS_PCM.cpp \
+      PLATFORM_API_HaikuOS_Utils.cpp \
+  LIBJSOUND_SRC_FILES += $(LIBJSOUND_MIDIFILES)
+  LIBJSOUND_SRC_FILES += $(LIBJSOUND_DAUDIOFILES)
+endif # OPENJDK_TARGET_OS haiku
+
 LIBJSOUND_CFLAGS += -DEXTRA_SOUND_JNI_LIBS='"$(EXTRA_SOUND_JNI_LIBS)"'
 
 $(eval $(call SetupNativeCompilation,BUILD_LIBJSOUND, \
@@ -131,6 +147,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJSOUND, \
     LIBS_macosx := -framework CoreAudio -framework CoreFoundation \
         -framework CoreServices -framework AudioUnit $(LIBCXX) \
         -framework CoreMIDI -framework AudioToolbox, \
+    LIBS_haiku := -lmedia -lmidi2 -lbe $(LIBCXX), \
     LIBS_windows := $(WIN_JAVA_LIB) advapi32.lib winmm.lib, \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \
     RC_FLAGS := $(RC_FLAGS) \

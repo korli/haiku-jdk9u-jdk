@@ -70,6 +70,8 @@ public class DefaultAsynchronousChannelProvider {
             return createProvider("sun.nio.ch.BsdAsynchronousChannelProvider");
         if (osname.equals("AIX"))
             return createProvider("sun.nio.ch.AixAsynchronousChannelProvider");
+        if (osname.equals("Haiku"))
+            return createProvider("sun.nio.ch.HaikuAsynchronousChannelProvider");
         throw new InternalError("platform not recognized");
     }
 }

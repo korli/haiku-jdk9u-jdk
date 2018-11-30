@@ -76,6 +76,7 @@ public class HaikuFileSystemProvider extends UnixFileSystemProvider {
 
     @Override
     FileTypeDetector getFileTypeDetector() {
-        return new MagicFileTypeDetector();
+        return null;
+        // Deprecated: return new MagicFileTypeDetector();
     }
 }

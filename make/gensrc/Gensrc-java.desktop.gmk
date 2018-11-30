@@ -31,7 +31,7 @@ $(eval $(call IncludeCustomExtension, jdk, gensrc/Gensrc-java.desktop.gmk))
 ifneq ($(OPENJDK_TARGET_OS), windows)
   include GensrcIcons.gmk
 
-  ifneq ($(OPENJDK_TARGET_OS), macosx)
+  ifeq ($(filter $(OPENJDK_TARGET_OS), macosx haiku), )
     include GensrcX11Wrappers.gmk
   endif
 endif
@@ -64,7 +64,7 @@ ifeq ($(OPENJDK_TARGET_OS), windows)
   PROP_SRC_DIRS += $(JDK_TOPDIR)/src/java.desktop/windows/classes/sun/awt/windows
 endif
 
-ifeq ($(filter $(OPENJDK_TARGET_OS), windows macosx), )
+ifeq ($(filter $(OPENJDK_TARGET_OS), windows macosx haiku), )
   PROP_SRC_DIRS += $(JDK_TOPDIR)/src/java.desktop/share/classes/com/sun/java/swing/plaf/gtk/resources
 endif
 

@@ -117,8 +117,9 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBVERIFY, \
     MAPFILE := $(JDK_TOPDIR)/make/mapfiles/libverify/mapfile-vers, \
     LDFLAGS := $(LDFLAGS_JDKLIB) \
         $(call SET_SHARED_LIBRARY_ORIGIN), \
-    LIBS_unix := -ljvm -lc, \
-    LIBS_haiku := -ljvm, \
+    LIBS_unix := -ljvm, \
+    LIBS_solaris := -lc, \
+    LIBS_linux := -lc, \
     LIBS_windows := jvm.lib, \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \
     RC_FLAGS := $(RC_FLAGS) \
@@ -182,6 +183,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJAVA, \
         -framework CoreFoundation \
         -framework Foundation \
         -framework Security -framework SystemConfiguration, \
+    LIBS_haiku := -lnetwork $(BUILD_LIBFDLIBM),\
     LIBS_windows := jvm.lib $(BUILD_LIBFDLIBM) $(WIN_VERIFY_LIB) \
         shell32.lib delayimp.lib \
         advapi32.lib version.lib, \
@@ -280,8 +282,10 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJIMAGE, \
         -export:JIMAGE_PackageToModule \
         -export:JIMAGE_FindResource -export:JIMAGE_GetResource \
         -export:JIMAGE_ResourceIterator -export:JIMAGE_ResourcePath, \
-    LIBS_unix := -ljvm -ldl $(LIBCXX), \
-    LIBS_solaris := -lc, \
+    LIBS_unix := -ljvm $(LIBCXX), \
+    LIBS_linux := -ldl, \
+    LIBS_solaris := -ldl -lc, \
+    LIBS_aix := -ldl, \
     LIBS_macosx := -lc++, \
     LIBS_windows := jvm.lib, \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \
@@ -371,6 +375,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJLI, \
     DISABLED_WARNINGS_solstudio := \
         E_ASM_DISABLES_OPTIMIZATION \
         E_STATEMENT_NOT_REACHED, \
+    DISABLED_WARNINGS_gcc := maybe-uninitialized, \
     MAPFILE := $(JDK_TOPDIR)/make/mapfiles/libjli/mapfile-vers, \
     LDFLAGS := $(LDFLAGS_JDKLIB) \
         $(call SET_SHARED_LIBRARY_ORIGIN), \

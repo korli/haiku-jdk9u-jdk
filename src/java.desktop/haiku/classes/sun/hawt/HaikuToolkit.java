@@ -35,7 +35,6 @@ import java.awt.im.spi.*;
 import java.awt.image.*;
 import java.awt.peer.*;
 import java.util.*;
-import java.util.logging.*;
 import sun.awt.*;
 import sun.awt.datatransfer.DataTransferer;
 import sun.lwawt.*;
@@ -122,9 +121,9 @@ public class HaikuToolkit extends LWToolkit {
         desktopProperties.put(SunToolkit.DESKTOPFONTHINTS, fontHints);
         desktopProperties.put("awt.mouse.numButtons", BUTTONS);
 
-        desktopProperties.put("DnD.Autoscroll.initialDelay", new Integer(50));
-        desktopProperties.put("DnD.Autoscroll.interval", new Integer(50));
-        desktopProperties.put("DnD.Autoscroll.cursorHysteresis", new Integer(5));
+        desktopProperties.put("DnD.Autoscroll.initialDelay", Integer.valueOf(50));
+        desktopProperties.put("DnD.Autoscroll.interval", Integer.valueOf(50));
+        desktopProperties.put("DnD.Autoscroll.cursorHysteresis", Integer.valueOf(5));
     }
 
     @Override
@@ -255,20 +254,6 @@ public class HaikuToolkit extends LWToolkit {
     }
 
     @Override
-    protected int getScreenWidth() {
-        GraphicsConfiguration config =
-                HaikuGraphicsConfig.getDefaultConfiguration();
-        return config.getBounds().width;
-    }
-
-    @Override
-    protected int getScreenHeight() {
-        GraphicsConfiguration config =
-                HaikuGraphicsConfig.getDefaultConfiguration();
-        return config.getBounds().height;
-    }
-
-    @Override
     public boolean areExtraMouseButtonsEnabled() throws HeadlessException {
         return false;
     }
@@ -279,12 +264,13 @@ public class HaikuToolkit extends LWToolkit {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getMenuShortcutKeyMask() {
         return Event.ALT_MASK;
     }
 
     @Override
-    protected DesktopPeer createDesktopPeer(Desktop target) {
+    public DesktopPeer createDesktopPeer(Desktop target) {
         return new HaikuDesktopPeer();
     }
 
@@ -292,7 +278,7 @@ public class HaikuToolkit extends LWToolkit {
     public int getScreenResolution() throws HeadlessException {
         HaikuGraphicsConfig config =
                 HaikuGraphicsConfig.getDefaultConfiguration();
-        return (int)((HaikuGraphicsDevice)config.getDevice()).getScreenResolution();
+        return (int)config.getDevice().getScreenResolution();
     }
 
     @Override
@@ -305,7 +291,7 @@ public class HaikuToolkit extends LWToolkit {
     }
 
     @Override
-    public Map mapInputMethodHighlight(InputMethodHighlight highlight)
+    public Map<TextAttribute, ?> mapInputMethodHighlight(InputMethodHighlight highlight)
             throws HeadlessException {
         return null;
     }

@@ -76,6 +76,6 @@ class HaikuFontConfiguration extends FontConfiguration {
 
     @Override
     protected void initReorderMap() {
-        reorderMap = new HashMap();
+        reorderMap = new HashMap<>();
     }
 }

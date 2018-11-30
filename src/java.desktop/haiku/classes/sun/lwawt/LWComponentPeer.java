@@ -903,7 +903,7 @@ public abstract class LWComponentPeer<T extends Component, D extends JComponent>
     @Override
     public boolean requestFocus(Component lightweightChild, boolean temporary,
                                 boolean focusedWindowChangeAllowed, long time,
-                                CausedFocusEvent.Cause cause)
+                                FocusEvent.Cause cause)
     {
         if (focusLog.isLoggable(PlatformLogger.Level.FINEST)) {
             focusLog.finest("lightweightChild=" + lightweightChild + ", temporary=" + temporary +
@@ -1224,6 +1224,7 @@ public abstract class LWComponentPeer<T extends Component, D extends JComponent>
      * Changes the target of the AWTEvent from awt component to appropriate
      * swing delegate.
      */
+    @SuppressWarnings("deprecation")
     private AWTEvent createDelegateEvent(final AWTEvent e) {
         // TODO modifiers should be changed to getModifiers()|getModifiersEx()?
         AWTEvent delegateEvent = null;
@@ -1276,7 +1277,7 @@ public abstract class LWComponentPeer<T extends Component, D extends JComponent>
         assert (e.getSource() == target);
 
         if (!target.isFocusOwner() && LWKeyboardFocusManagerPeer.shouldFocusOnClick(target)) {
-            LWKeyboardFocusManagerPeer.requestFocusFor(target, CausedFocusEvent.Cause.MOUSE_EVENT);
+            LWKeyboardFocusManagerPeer.requestFocusFor(target, FocusEvent.Cause.MOUSE_EVENT);
         }
     }
 

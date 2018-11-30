@@ -295,7 +295,7 @@ public class HaikuPlatformWindow implements PlatformWindow {
     }
 
     @Override
-    public boolean rejectFocusRequest(CausedFocusEvent.Cause cause) {
+    public boolean rejectFocusRequest(FocusEvent.Cause cause) {
         return false;
     }
 

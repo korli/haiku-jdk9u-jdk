@@ -387,7 +387,7 @@ class HaikuFileDialog implements FileDialogPeer {
     @Override
     public boolean requestFocus(Component lightweightChild, boolean temporary,
             boolean focusedWindowChangeAllowed, long time,
-            CausedFocusEvent.Cause cause) {
+            FocusEvent.Cause cause) {
         return false;
     }
 

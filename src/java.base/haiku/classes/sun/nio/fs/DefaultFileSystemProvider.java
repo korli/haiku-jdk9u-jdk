@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2011, 2017, Oracle and/or its affiliates. All rights reserved.
- * Copyright 2017 SAP SE. All rights reserved.
+ * Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,19 +23,21 @@
  * questions.
  */
 
-#include <jni.h>
-#include "com_sun_management_internal_OperatingSystemImpl.h"
+package sun.nio.fs;
 
-JNIEXPORT jdouble JNICALL
-Java_com_sun_management_internal_OperatingSystemImpl_getSystemCpuLoad0
-(JNIEnv *env, jobject dummy)
-{
-  return -1.0;
-}
+import java.nio.file.spi.FileSystemProvider;
 
-JNIEXPORT jdouble JNICALL
-Java_com_sun_management_internal_OperatingSystemImpl_getProcessCpuLoad0
-(JNIEnv *env, jobject dummy)
-{
-  return -1.0;
+/**
+ * Creates this platform's default FileSystemProvider.
+ */
+
+public class DefaultFileSystemProvider {
+    private DefaultFileSystemProvider() { }
+
+    /**
+     * Returns the default FileSystemProvider.
+     */
+    public static FileSystemProvider create() {
+        return new HaikuFileSystemProvider();
+    }
 }

@@ -38,7 +38,7 @@ import java.util.*;
 import sun.awt.*;
 import sun.print.*;
 import sun.security.util.SecurityConstants;
-import sun.misc.ThreadGroupUtils;
+import sun.awt.util.ThreadGroupUtils;
 
 import static sun.lwawt.LWWindowPeer.PeerType;
 
@@ -371,6 +371,11 @@ public abstract class LWToolkit extends SunToolkit implements Runnable {
     }
 
     @Override
+    public final boolean isTaskbarSupported() {
+        return true;
+    }
+
+    @Override
     public final KeyboardFocusManagerPeer getKeyboardFocusManagerPeer() {
         return LWKeyboardFocusManagerPeer.getInstance();
     }
@@ -414,7 +419,7 @@ public abstract class LWToolkit extends SunToolkit implements Runnable {
     public final Clipboard getSystemClipboard() {
         SecurityManager security = System.getSecurityManager();
         if (security != null) {
-            security.checkPermission(SecurityConstants.AWT.ACCESS_CLIPBOARD_PERMISSION);
+            security.checkPermission(AWTPermissions.ACCESS_CLIPBOARD_PERMISSION);
         }
 
         synchronized (this) {

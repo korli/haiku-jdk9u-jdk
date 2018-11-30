@@ -27,7 +27,6 @@ package sun.tools.attach;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 import com.sun.tools.attach.AttachNotSupportedException;
-import com.sun.tools.attach.spi.AttachProvider;
 
 import java.io.IOException;
 
@@ -60,7 +59,7 @@ public class AttachProviderImpl extends HotSpotAttachProvider {
         // to be not attachable.
         testAttachable(vmid);
 
-        return new HaikuVirtualMachine(this, vmid);
+        return new VirtualMachineImpl(this, vmid);
     }
 
     public VirtualMachine attachVirtualMachine(VirtualMachineDescriptor vmd)
@@ -75,7 +74,7 @@ public class AttachProviderImpl extends HotSpotAttachProvider {
         if (vmd instanceof HotSpotVirtualMachineDescriptor) {
             assert ((HotSpotVirtualMachineDescriptor)vmd).isAttachable();
             checkAttachPermission();
-            return new HaikuVirtualMachine(this, vmd.id());
+            return new VirtualMachineImpl(this, vmd.id());
         } else {
             return attachVirtualMachine(vmd.id());
         }

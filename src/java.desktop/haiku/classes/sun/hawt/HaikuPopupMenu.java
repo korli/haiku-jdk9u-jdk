@@ -43,6 +43,7 @@ public class HaikuPopupMenu extends HaikuMenu implements PopupMenuPeer {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void show(Event event) {
         Component origin = (Component)event.target;
         if (origin != null) {

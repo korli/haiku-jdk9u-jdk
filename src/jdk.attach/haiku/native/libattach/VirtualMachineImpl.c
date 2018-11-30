@@ -41,7 +41,7 @@
 #include <sys/stat.h>
 #include <sys/un.h>
 
-#include "sun_tools_attach_HaikuVirtualMachine.h"
+#include "sun_tools_attach_VirtualMachineImpl.h"
 
 #define RESTARTABLE(_cmd, _result) do { \
   do { \
@@ -50,11 +50,11 @@
 } while(0)
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    socket
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_sun_tools_attach_HaikuVirtualMachine_socket
+JNIEXPORT jint JNICALL Java_sun_tools_attach_VirtualMachineImpl_socket
   (JNIEnv *env, jclass cls)
 {
     int fd = socket(PF_UNIX, SOCK_STREAM, 0);
@@ -65,11 +65,11 @@ JNIEXPORT jint JNICALL Java_sun_tools_attach_HaikuVirtualMachine_socket
 }
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    connect
  * Signature: (ILjava/lang/String;)I
  */
-JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_connect
+JNIEXPORT void JNICALL Java_sun_tools_attach_VirtualMachineImpl_connect
   (JNIEnv *env, jclass cls, jint fd, jstring path)
 {
     jboolean isCopy;
@@ -109,11 +109,11 @@ JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_connect
 }
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    sendQuitTo
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_sendQuitTo
+JNIEXPORT void JNICALL Java_sun_tools_attach_VirtualMachineImpl_sendQuitTo
   (JNIEnv *env, jclass cls, jint pid)
 {
     if (kill((pid_t)pid, SIGQUIT)) {
@@ -122,11 +122,11 @@ JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_sendQuitTo
 }
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    checkPermissions
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_checkPermissions
+JNIEXPORT void JNICALL Java_sun_tools_attach_VirtualMachineImpl_checkPermissions
   (JNIEnv *env, jclass cls, jstring path)
 {
     jboolean isCopy;
@@ -187,11 +187,11 @@ JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_checkPermission
 }
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    close
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_close
+JNIEXPORT void JNICALL Java_sun_tools_attach_VirtualMachineImpl_close
   (JNIEnv *env, jclass cls, jint fd)
 {
     int res;
@@ -199,11 +199,11 @@ JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_close
 }
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    read
  * Signature: (I[BI)I
  */
-JNIEXPORT jint JNICALL Java_sun_tools_attach_HaikuVirtualMachine_read
+JNIEXPORT jint JNICALL Java_sun_tools_attach_VirtualMachineImpl_read
   (JNIEnv *env, jclass cls, jint fd, jbyteArray ba, jint off, jint baLen)
 {
     unsigned char buf[128];
@@ -229,11 +229,11 @@ JNIEXPORT jint JNICALL Java_sun_tools_attach_HaikuVirtualMachine_read
 }
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    write
  * Signature: (I[B)V
  */
-JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_write
+JNIEXPORT void JNICALL Java_sun_tools_attach_VirtualMachineImpl_write
   (JNIEnv *env, jclass cls, jint fd, jbyteArray ba, jint off, jint bufLen)
 {
     size_t remaining = bufLen;
@@ -260,11 +260,11 @@ JNIEXPORT void JNICALL Java_sun_tools_attach_HaikuVirtualMachine_write
 }
 
 /*
- * Class:     sun_tools_attach_HaikuVirtualMachine
+ * Class:     sun_tools_attach_VirtualMachineImpl
  * Method:    getTempDir
  * Signature: (V)Ljava.lang.String;
  */
-JNIEXPORT jstring JNICALL Java_sun_tools_attach_HaikuVirtualMachine_getTempDir
+JNIEXPORT jstring JNICALL Java_sun_tools_attach_VirtualMachineImpl_getTempDir
   (JNIEnv *env, jclass cls)
 {
     // The Hotspot side uses os::get_temp_directory() which is "/tmp".

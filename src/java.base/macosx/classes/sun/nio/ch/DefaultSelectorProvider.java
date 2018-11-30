@@ -42,7 +42,7 @@ public class DefaultSelectorProvider {
      * Returns the default SelectorProvider.
      */
     public static SelectorProvider create() {
-        return new sun.nio.ch.KQueueSelectorProvider();
+        return new sun.nio.ch.PollSelectorProvider();
     }
 
 }

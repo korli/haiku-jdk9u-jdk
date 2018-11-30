@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2011, 2017, Oracle and/or its affiliates. All rights reserved.
- * Copyright 2017 SAP SE. All rights reserved.
+ * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,19 +23,28 @@
  * questions.
  */
 
-#include <jni.h>
-#include "com_sun_management_internal_OperatingSystemImpl.h"
+#include "jni.h"
 
-JNIEXPORT jdouble JNICALL
-Java_com_sun_management_internal_OperatingSystemImpl_getSystemCpuLoad0
-(JNIEnv *env, jobject dummy)
-{
-  return -1.0;
+#include "ProcessHandleImpl_unix.h"
+
+/*
+ * Implementation of native ProcessHandleImpl functions for Haiku.
+ * See ProcessHandleImpl_unix.c for more details.
+ */
+
+void os_initNative(JNIEnv *env, jclass clazz) {}
+
+jint os_getChildren(JNIEnv *env, jlong jpid, jlongArray jarray,
+                    jlongArray jparentArray, jlongArray jstimesArray) {
+    // TODO
+    return -1;
 }
 
-JNIEXPORT jdouble JNICALL
-Java_com_sun_management_internal_OperatingSystemImpl_getProcessCpuLoad0
-(JNIEnv *env, jobject dummy)
-{
-  return -1.0;
+pid_t os_getParentPidAndTimings(JNIEnv *env, pid_t pid, jlong *total, jlong *start) {
+    // TODO
+    return -1;
+}
+
+void os_getCmdlineAndUserInfo(JNIEnv *env, jobject jinfo, pid_t pid) {
+    // TODO;
 }

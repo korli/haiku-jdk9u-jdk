@@ -29,7 +29,7 @@ include LibCommon.gmk
 
 ifeq ($(OPENJDK_TARGET_OS_TYPE), unix)
 
-  ifeq (, $(filter $(OPENJDK_TARGET_OS), macosx aix))
+  ifeq (, $(filter $(OPENJDK_TARGET_OS), macosx aix haiku))
     $(eval $(call SetupNativeCompilation,BUILD_LIBSCTP, \
         LIBRARY := sctp, \
         OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
@@ -48,6 +48,7 @@ ifeq ($(OPENJDK_TARGET_OS_TYPE), unix)
         LIBS_unix := -lnio -lnet -ljava -ljvm, \
         LIBS_linux := -lpthread $(LIBDL), \
         LIBS_solaris := -lsocket -lc, \
+        LIBS_solaris := -lnetwork, \
         OBJECT_DIR := $(SUPPORT_OUTPUTDIR)/native/$(MODULE)/libsctp, \
     ))
 

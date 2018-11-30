@@ -399,7 +399,9 @@ Java_com_sun_management_internal_OperatingSystemImpl_getTotalPhysicalMemorySize0
 #endif
 }
 
-
+jlong JNICALL
+Java_com_sun_management_internal_OperatingSystemImpl_getMaxFileDescriptorCount0
+  (JNIEnv *env, jobject mbean);
 
 JNIEXPORT jlong JNICALL
 Java_com_sun_management_internal_OperatingSystemImpl_getOpenFileDescriptorCount0
@@ -458,7 +460,7 @@ Java_com_sun_management_internal_OperatingSystemImpl_getOpenFileDescriptorCount0
 #elif defined(__HAIKU__)
     long i, fds = 0;
     long maxfds =
-        Java_sun_management_OperatingSystemImpl_getMaxFileDescriptorCount(env, mbean);
+        Java_com_sun_management_internal_OperatingSystemImpl_getMaxFileDescriptorCount0(env, mbean);
 
     for (i = 0; i < maxfds; i++) {
         if (fcntl(i, F_GETFD, 0) == 0 || errno != EBADF) {

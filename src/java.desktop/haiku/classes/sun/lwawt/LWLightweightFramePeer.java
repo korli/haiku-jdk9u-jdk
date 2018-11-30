@@ -31,8 +31,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.dnd.DropTarget;
+import java.awt.event.FocusEvent;
 
-import sun.awt.CausedFocusEvent;
 import sun.awt.LightweightFrame;
 import sun.swing.JLightweightFrame;
 import sun.swing.SwingAccessor;
@@ -60,7 +60,7 @@ public class LWLightweightFramePeer extends LWWindowPeer {
     }
 
     @Override
-    public boolean requestWindowFocus(CausedFocusEvent.Cause cause) {
+    public boolean requestWindowFocus(FocusEvent.Cause cause) {
         if (!focusAllowedFor()) {
             return false;
         }

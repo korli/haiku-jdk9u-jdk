@@ -83,7 +83,7 @@ public class HaikuTrayIcon implements TrayIconPeer {
     public void showPopupMenu(final int x, final int y) {
         HaikuToolkit.executeOnEventHandlerThread(target, new Runnable() {
             public void run() {
-                PopupMenu newPopup = ((TrayIcon)target).getPopupMenu();
+                PopupMenu newPopup = target.getPopupMenu();
                 if (popup != newPopup) {
                     if (popup != null) {
                         popupParent.remove(popup);
@@ -112,7 +112,7 @@ public class HaikuTrayIcon implements TrayIconPeer {
         	icon = new HaikuDrawable(iconSize.width, iconSize.height);
         }
 
-        boolean autosize = ((TrayIcon)target).isImageAutoSize();
+        boolean autosize = target.isImageAutoSize();
         int width = autosize ? iconSize.width : image.getWidth(observer);
         int height = autosize ? iconSize.height : image.getHeight(observer);
 
@@ -127,7 +127,7 @@ public class HaikuTrayIcon implements TrayIconPeer {
     class IconObserver implements ImageObserver {
         public boolean imageUpdate(Image image, int flags, int x, int y,
                 int width, int height) {
-            if (image != ((TrayIcon)target).getImage()) {
+            if (image != target.getImage()) {
                 return false;
             }
 

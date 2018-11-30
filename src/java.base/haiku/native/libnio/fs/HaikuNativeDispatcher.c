@@ -162,7 +162,7 @@ Java_sun_nio_fs_HaikuNativeDispatcher_entryfordev(JNIEnv* env, jclass clazz,
     // TODO: won't work if two volumes have the same name.
     // BPath can convert entry ref to path but there's no
     // C function to do it.
-    char dir[B_FILE_NAME_LENGTH];
+    char dir[B_PATH_NAME_LENGTH];
     snprintf(dir, sizeof(dir), "/%s", name);
 
     const char* options;

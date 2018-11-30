@@ -54,6 +54,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBATTACH, \
     LDFLAGS_windows := -order:@$(JDK_TOPDIR)/make/mapfiles/libattach/reorder-windows-$(OPENJDK_TARGET_CPU), \
     LIBS := $(JDKLIB_LIBS), \
     LIBS_solaris := -ldoor, \
+    LIBS_haiku := -lnetwork, \
     LIBS_windows := $(WIN_JAVA_LIB) advapi32.lib psapi.lib, \
     OBJECT_DIR := $(SUPPORT_OUTPUTDIR)/native/$(MODULE)/libattach, \
 ))

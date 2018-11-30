@@ -38,6 +38,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.accessibility.*;
 
+import sun.awt.AWTAccessor;
 import sun.awt.datatransfer.*;
 import sun.awt.dnd.*;
 import sun.lwawt.*;
@@ -66,32 +67,24 @@ public final class HaikuDragSourceContextPeer extends SunDragSourceContextPeer {
     }
 
     protected void startDrag(Transferable transferable, long[] formats,
-            Map formatMap) {
+            Map<Long, DataFlavor> formatMap) {
         DragGestureEvent trigger = getTrigger();
 
+        Point dragOrigin = new Point(trigger.getDragOrigin());
         Component component = trigger.getComponent();
-        ComponentPeer peer = component.getPeer();
-
-        // For a lightweight component traverse up the hierarchy to the
-        // first heavyweight.
-        if (component.isLightweight()) {
-            for (Component parent = component.getParent(); parent != null;
-                    parent = parent.getParent()) {
-                if (parent.isLightweight() == false) {
-                    peer = parent.getPeer();
-                    break;
-                }
-            }
+        // For a lightweight component traverse up the hierarchy to the root
+        Point loc = component.getLocation();
+        Component rootComponent = component;
+        while (!(rootComponent instanceof Window)) {
+            dragOrigin.translate(loc.x, loc.y);
+            rootComponent = rootComponent.getParent();
+            loc = rootComponent.getLocation();
         }
 
-        if (!(peer instanceof LWComponentPeer)) {
-            throw new IllegalArgumentException(
-                "DragSource's peer must be a LWComponentPeer.");
-        }
-
-        LWComponentPeer lwPeer = (LWComponentPeer)peer;
-        HaikuPlatformWindow platformWindow = (HaikuPlatformWindow)
-            lwPeer.getPlatformWindow();
+        LWComponentPeer<?, ?> peer = AWTAccessor.getComponentAccessor()
+                                                .getPeer(rootComponent);
+        HaikuPlatformWindow platformWindow =
+            (HaikuPlatformWindow)peer.getPlatformWindow();
         long nativeWindow = platformWindow.getLayerPtr();
 
         ArrayList<String> mimeTypes = new ArrayList<String>();
@@ -99,7 +92,7 @@ public final class HaikuDragSourceContextPeer extends SunDragSourceContextPeer {
 
         HaikuDataTransferer transferer = (HaikuDataTransferer)
             DataTransferer.getInstance();
-        Map<Long, DataFlavor> map = (Map<Long, DataFlavor>)formatMap;
+        Map<Long, DataFlavor> map = formatMap;
 
         if (map.keySet().size() > 0) {
             for (long format : map.keySet()) {

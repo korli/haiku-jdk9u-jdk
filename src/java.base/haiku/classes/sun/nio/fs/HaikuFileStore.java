@@ -83,7 +83,7 @@ class HaikuFileStore
             } finally {
                 UnixNativeDispatcher.close(fd);
             }
-        } catch (IOException ignore) {
+        } catch (UnixException ignore) {
             // nothing we can do
         }
         return false;

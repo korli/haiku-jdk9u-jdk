@@ -34,6 +34,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBUNPACK, \
         $(JDK_TOPDIR)/src/jdk.pack/share/native/common-unpack, \
     TOOLCHAIN := TOOLCHAIN_LINK_CXX, \
     OPTIMIZATION := LOW, \
+    DISABLED_WARNINGS_gcc := implicit-fallthrough, \
     CFLAGS := $(CXXFLAGS_JDKLIB) \
         -DNO_ZLIB -DUNPACK_JNI -DFULL \
         -I$(SUPPORT_OUTPUTDIR)/headers/java.base \
@@ -44,7 +45,10 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBUNPACK, \
     LDFLAGS := $(LDFLAGS_JDKLIB) $(LDFLAGS_CXX_JDK) \
         $(call SET_SHARED_LIBRARY_ORIGIN), \
     LDFLAGS_windows := -map:$(SUPPORT_OUTPUTDIR)/native/$(MODULE)/unpack.map -debug, \
-    LIBS_unix := -ljvm $(LIBCXX) -ljava -lc, \
+    LIBS_unix := -ljvm $(LIBCXX) -ljava, \
+    LIBS_solaris := -lc, \
+    LIBS_aix := -lc, \
+    LIBS_linux := -lc, \
     LIBS_windows := jvm.lib $(WIN_JAVA_LIB), \
     OBJECT_DIR := $(SUPPORT_OUTPUTDIR)/native/$(MODULE)/libunpack, \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \

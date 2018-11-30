@@ -145,7 +145,7 @@ ifeq ($(OPENJDK_TARGET_OS), windows)
   LIBAWT_DIRS += $(JDK_TOPDIR)/src/java.desktop/share/native/common/awt/utility
 endif
 
-ifneq ($(filter $(OPENJDK_TARGET_OS), solaris linux macosx aix), )
+ifneq ($(filter $(OPENJDK_TARGET_OS), solaris linux macosx aix haiku), )
   LIBAWT_EXFILES += awt_Font.c CUPSfuncs.c fontpath.c X11Color.c
 endif
 
@@ -497,7 +497,8 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJAVAJPEG, \
     CFLAGS := $(CFLAGS_JDKLIB) $(BUILD_LIBJAVAJPEG_HEADERS) \
         $(LIBJAVA_HEADER_FLAGS) \
         -I$(SUPPORT_OUTPUTDIR)/headers/java.desktop, \
-    DISABLED_WARNINGS_gcc := clobbered, \
+    DISABLED_WARNINGS_gcc := clobbered implicit-fallthrough \
+        shift-negative-value, \
     MAPFILE := $(JDK_TOPDIR)/make/mapfiles/libjpeg/mapfile-vers, \
     LDFLAGS := $(LDFLAGS_JDKLIB) \
         $(call SET_SHARED_LIBRARY_ORIGIN), \
@@ -611,7 +612,7 @@ ifneq ($(OPENJDK_TARGET_OS), windows)
   HARFBUZZ_CFLAGS += -DGETPAGESIZE -DHAVE_MPROTECT -DHAVE_PTHREAD \
                       -DHAVE_SYSCONF -DHAVE_SYS_MMAN_H -DHAVE_UNISTD_H
 endif
-ifneq (, $(findstring $(OPENJDK_TARGET_OS), linux macosx))
+ifneq (, $(findstring $(OPENJDK_TARGET_OS), linux macosx haiku))
   HARFBUZZ_CFLAGS += -DHAVE_INTEL_ATOMIC_PRIMITIVES
 endif
 ifeq ($(OPENJDK_TARGET_OS), solaris)
@@ -642,7 +643,7 @@ ifeq ($(OPENJDK_TARGET_OS), windows)
       X11TextRenderer.c
   LIBFONTMANAGER_OPTIMIZATION := HIGHEST
   LIBFONTMANAGER_CFLAGS += -I$(JDK_TOPDIR)/src/java.desktop/$(OPENJDK_TARGET_OS_TYPE)/native/libawt/windows
-else ifeq ($(OPENJDK_TARGET_OS), macosx)
+else ifneq ($(filter macosx haiku, $(OPENJDK_TARGET_OS)), )
   LIBFONTMANAGER_EXCLUDE_FILES += X11FontScaler.c \
       X11TextRenderer.c \
       fontpath.c \
@@ -677,7 +678,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBFONTMANAGER, \
     DISABLED_WARNINGS_gcc := sign-compare int-to-pointer-cast \
         type-limits missing-field-initializers, \
     DISABLED_WARNINGS_CXX_gcc := reorder delete-non-virtual-dtor strict-overflow \
-        maybe-uninitialized, \
+        maybe-uninitialized implicit-fallthrough, \
     DISABLED_WARNINGS_clang := unused-value incompatible-pointer-types \
         tautological-constant-out-of-range-compare int-to-pointer-cast, \
     DISABLED_WARNINGS_C_solstudio = \
@@ -914,8 +915,8 @@ ifeq ($(ENABLE_HEADLESS_ONLY), false)
     LIBSPLASHSCREEN_CFLAGS += -DWITH_WIN32
   else ifeq ($(OPENJDK_TARGET_OS), haiku)
     LIBSPLASHSCREEN_CFLAGS += -DWITH_HAIKU \
-        -I$(JDK_TOPDIR)/src/haiku/native/sun/awt/splashscreen \
-        -I$(JDK_TOPDIR)/src/haiku/native/sun/haikuapp
+        -I$(JDK_TOPDIR)/src/java.desktop/haiku/native/sun/awt/splashscreen \
+        -I$(JDK_TOPDIR)/src/java.desktop/haiku/native/libhaikuapp
   else
     LIBSPLASHSCREEN_CFLAGS += -DWITH_X11 $(X_CFLAGS)
   endif
@@ -936,7 +937,8 @@ ifeq ($(ENABLE_HEADLESS_ONLY), false)
         -framework Cocoa \
         -framework JavaNativeFoundation
   else ifeq ($(OPENJDK_TARGET_OS), haiku)
-    LIBSPLASHSCREEN_LIBS += -lhaikuapp -lbe $(LIBCXX) -liconv
+    LIBSPLASHSCREEN_LDFLAGS := -L$(INSTALL_LIBRARIES_HERE)
+    LIBSPLASHSCREEN_LIBS += -lhaikuapp -lbe -lstdc++ -liconv
   else ifeq ($(OPENJDK_TARGET_OS), windows)
     LIBSPLASHSCREEN_LDFLAGS := -delayload:user32.dll
     LIBSPLASHSCREEN_LIBS += kernel32.lib user32.lib gdi32.lib delayimp.lib $(WIN_JAVA_LIB) jvm.lib
@@ -960,7 +962,9 @@ ifeq ($(ENABLE_HEADLESS_ONLY), false)
       OPTIMIZATION := LOW, \
       CFLAGS := $(LIBSPLASHSCREEN_CFLAGS) $(CFLAGS_JDKLIB) \
                 $(GIFLIB_CFLAGS) $(LIBJPEG_CFLAGS) $(PNG_CFLAGS), \
-      DISABLED_WARNINGS_gcc := sign-compare type-limits unused-result maybe-uninitialized shift-negative-value, \
+      CXXFLAGS := $(CXXFLAGS_JDKLIB) $(LIBSPLASHSCREEN_CFLAGS), \
+      DISABLED_WARNINGS_gcc := sign-compare type-limits unused-result \
+                maybe-uninitialized shift-negative-value implicit-fallthrough, \
       DISABLED_WARNINGS_clang := incompatible-pointer-types, \
       DISABLED_WARNINGS_solstudio := E_NEWLINE_NOT_LAST E_DECLARATION_IN_CODE \
           E_STATEMENT_NOT_REACHED, \
@@ -1101,7 +1105,8 @@ ifeq ($(OPENJDK_TARGET_OS), haiku)
       AccelGlyphCache.c
 
   LIBAWT_LWAWT_DIRS := \
-      $(JDK_TOPDIR)/src/java.desktop/haiku/native/sun/hawt \
+      $(JDK_TOPDIR)/src/java.desktop/haiku/native/libawt_lwawt/awt \
+      $(JDK_TOPDIR)/src/java.desktop/haiku/native/libawt_lwawt/font \
       $(JDK_TOPDIR)/src/java.desktop/share/native/common/font
 
   $(eval $(call SetupNativeCompilation,BUILD_LIBAWT_LWAWT, \
@@ -1111,20 +1116,26 @@ ifeq ($(OPENJDK_TARGET_OS), haiku)
       LANG := C++, \
       INCLUDE_FILES := $(LIBAWT_LWAWT_FILES), \
       OPTIMIZATION := LOW, \
+      DISABLED_WARNINGS_gcc := deprecated, \
       CFLAGS := $(CFLAGS_JDKLIB) \
           $(foreach dir, $(LIBAWT_LWAWT_DIRS), -I$(dir)) \
+          -I$(SUPPORT_OUTPUTDIR)/headers/java.desktop \
+          -I$(JDK_TOPDIR)/src/java.desktop/haiku/native/include \
           -I$(JDK_TOPDIR)/src/java.desktop/haiku/native/libhaikuapp \
           -I$(JDK_TOPDIR)/src/java.desktop/share/native/common/java2d \
           -I$(JDK_TOPDIR)/src/java.desktop/share/native/common/java2d \
+          -I$(JDK_TOPDIR)/src/java.desktop/share/native/common/awt/debug \
+          -I$(JDK_TOPDIR)/src/java.desktop/share/native/include \
           -I$(JDK_TOPDIR)/src/java.desktop/share/native/libawt/awt/image \
           -I$(JDK_TOPDIR)/src/java.desktop/share/native/libawt/awt/image/cvutils \
           -I$(JDK_TOPDIR)/src/java.desktop/share/native/libawt/java2d/loops \
           -I$(JDK_TOPDIR)/src/java.desktop/share/native/libawt/java2d/pipe \
-          -I$(JDK_TOPDIR)/src/java.desktop/share/native/sun/awt/debug, \
+          -I$(JDK_TOPDIR)/src/java.desktop/share/native/libawt/java2d, \
       LDFLAGS := $(LDFLAGS_JDKLIB) \
-          $(call SET_SHARED_LIBRARY_ORIGIN), \
-      LDFLAGS_SUFFIX_haiku := -lawt -lmlib_image -lhaikuapp -ljvm \
-          -ljava -lbe -ltracker, \
+          $(call SET_SHARED_LIBRARY_ORIGIN) \
+          -L$(INSTALL_LIBRARIES_HERE), \
+      LIBS := -lawt -lmlib_image -lhaikuapp -ljvm \
+          -ljava -lbe -ltracker -lstdc++, \
       OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libawt_lwawt, \
       DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
 

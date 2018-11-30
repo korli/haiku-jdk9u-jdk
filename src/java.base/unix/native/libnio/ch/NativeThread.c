@@ -52,8 +52,7 @@
   /* Also defined in net/bsd_close.c */
   #define INTERRUPT_SIGNAL SIGIO
 #elif __HAIKU__
-  #include <pthread.h>
-  #include <signal.h>
+  #include <OS.h>
   #define INTERRUPT_SIGNAL (SIGRTMAX - 2)
 #else
   #error "missing platform-specific definition here"
@@ -88,6 +87,8 @@ Java_sun_nio_ch_NativeThread_current(JNIEnv *env, jclass cl)
 {
 #ifdef __solaris__
     return (jlong)thr_self();
+#elif defined(__HAIKU__)
+    return (jlong)find_thread(NULL);
 #else
     return (jlong)pthread_self();
 #endif
@@ -99,6 +100,8 @@ Java_sun_nio_ch_NativeThread_signal(JNIEnv *env, jclass cl, jlong thread)
     int ret;
 #ifdef __solaris__
     ret = thr_kill((thread_t)thread, INTERRUPT_SIGNAL);
+#elif defined(__HAIKU__)
+    ret = send_signal(thread, INTERRUPT_SIGNAL);
 #else
     ret = pthread_kill((pthread_t)thread, INTERRUPT_SIGNAL);
 #endif

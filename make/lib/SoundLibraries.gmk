@@ -136,7 +136,8 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJSOUND, \
     INCLUDE_FILES := $(LIBJSOUND_SRC_FILES), \
     TOOLCHAIN := $(LIBJSOUND_TOOLCHAIN), \
     OPTIMIZATION := LOW, \
-    CFLAGS := $(CFLAGS_JDKLIB) \
+    DISABLED_WARNINGS_gcc := sign-compare, \
+      CFLAGS := $(CFLAGS_JDKLIB) \
         $(LIBJSOUND_CFLAGS), \
     CXXFLAGS := $(CXXFLAGS_JDKLIB) $(LIBJSOUND_CFLAGS), \
     MAPFILE := $(JDK_TOPDIR)/make/mapfiles/libjsound/mapfile-vers, \
@@ -147,7 +148,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJSOUND, \
     LIBS_macosx := -framework CoreAudio -framework CoreFoundation \
         -framework CoreServices -framework AudioUnit $(LIBCXX) \
         -framework CoreMIDI -framework AudioToolbox, \
-    LIBS_haiku := -lmedia -lmidi2 -lbe $(LIBCXX), \
+    LIBS_haiku := -lmedia -lmidi2 -lbe -lstdc++, \
     LIBS_windows := $(WIN_JAVA_LIB) advapi32.lib winmm.lib, \
     VERSIONINFO_RESOURCE := $(GLOBAL_VERSION_INFO_RESOURCE), \
     RC_FLAGS := $(RC_FLAGS) \
